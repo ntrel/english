@@ -46,19 +46,18 @@ that it isn't instantiated.
 ### Checking for identity
 
 For class objects, the `==` and `!=` operators compare the _contents_ of the objects.
-Therefore, comparing against `null` is invalid, as `null` has no contents.
-The `is` compares for identity. To compare for nonidentity, use `e1 !is e2`.
+However, comparison against `null` is valid.
+
+The `is` operator compares for identity. To compare for nonidentity, use `e1 !is e2`.
 
 ```d
-MyClass c;
-if (c == null)  // error
+MyClass c, d;
+...
+if (c == d)  // do they compare equal?
     ...
-if (c is null)  // ok
+if (c is d)  // do they refer to the same object?
     ...
 ```
-
-For `struct` objects all bits are compared,
-for other operand types, identity is the same as equality.
 
 ### In-depth
 
