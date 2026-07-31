@@ -55,10 +55,10 @@ a matching constructor when creating an instance of a class `C`, based on argume
 given e.g. `new C(args)`.
 
 - A constructor is declared as `this(Parameters) { /* setup code */ }`.
-- A constructor body can call another constructor (delegating constructors).
-- `super(args)` can be used to explicitly call the base constructor.
+- A constructor body can call another constructor with `this(args)`.
+- `super(args)` can be used to explicitly call a base constructor.
 
-### Runtime Type Information
+### Runtime type information
 
     class Foo {}
     class Bar : Foo {}
