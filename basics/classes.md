@@ -1,6 +1,6 @@
 # Classes
 
-D provides support for classes and interfaces like in Java or C++.
+D provides support for classes and interfaces like in Java.
 
 All `class` types implicitly inherit from [`Object`](https://dlang.org/phobos/object.html).
 
@@ -11,7 +11,7 @@ Classes in D are generally instantiated on the heap using `new`:
 
     auto bar = new Bar;
 
-Class objects are always reference types and unlike `struct` aren't
+Class objects are always reference types and unlike structs, they aren't
 copied by value.
 
     Bar bar = foo; // bar points to foo
@@ -21,12 +21,18 @@ when no references to an object exist anymore.
 
 ### Inheritance
 
+Like [structs](basics/structs), a class can have member functions (methods).
+By default, they are virtual and can be overridden by a child class.
+
 If a member function of a base class is overridden, the keyword
 `override` must be used. This prevents unintentional
 overriding of functions.
 
+    class Foo {
+        void functionFromFoo() {}
+    }
     class Bar : Foo {
-        override functionFromFoo() {}
+        override void functionFromFoo() {}
     }
 
 In D, each class may only directly inherit from one other class.
@@ -37,11 +43,39 @@ in practice because D (like Java), supports interfaces.
 
 - A function can be marked `final` in a base class to disallow overriding
 it.
-- A function can be declared as `abstract` to force derived classes to override
+- A function can be declared as `abstract` to force a derived class to override
 it.
 - A whole class can be declared as `abstract` to make sure
 that it isn't instantiated.
-- `super(..)` can be used to explicitly call the base constructor.
+
+### Constructors
+
+Similar to structs, a class can define one or more constructors. The compiler calls
+a matching constructor when creating an instance of a class `C`, based on arguments
+given e.g. `new C(args)`.
+
+- A constructor is declared as `this(Parameters) { /* setup code */ }`.
+- A constructor body can call another constructor (delegating constructors).
+- `super(args)` can be used to explicitly call the base constructor.
+
+### Runtime Type Information
+
+    class Foo {}
+    class Bar : Foo {}
+
+    void main()
+    {
+        Foo foo = new Bar;
+        assert(typeid(foo) == typeid(Bar));
+
+        // dynamic cast
+        Bar bar = cast(Bar) foo;
+        assert(bar);
+    }
+
+- `typeid(foo)` is a runtime expression which gives the *TypeInfo* object for *Bar*.
+- `cast(Bar) foo` will check `foo` is an instance of `Bar`, casting `foo` if it is,
+or yielding `null` otherwise.
 
 ### Checking for identity
 
@@ -81,6 +115,7 @@ class Any {
     // classes
     protected string type;
 
+    // constructor
     this(string type) {
         this.type = type;
     }
@@ -100,7 +135,6 @@ class Integer : Any {
         int number;
     }
 
-    // constructor
     this(int number) {
         // call base class constructor
         super("integer");
